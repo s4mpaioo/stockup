@@ -4,6 +4,7 @@ import br.com.stockup.enums.ModeloProduto;
 import br.com.stockup.enums.StatusProduto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,7 @@ public class Produto {
     private String referencia;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ModeloProduto modelo;
 
     @Enumerated(EnumType.STRING)
@@ -50,6 +52,7 @@ public class Produto {
     private String cor;
 
     @Column(nullable = false)
+    @PositiveOrZero(message = "O estoque mínimo não pode ser negativo")
     private Integer estoqueMinimo = 0;
 
     @Column(length = 500)

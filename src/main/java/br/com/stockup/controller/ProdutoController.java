@@ -1,6 +1,6 @@
 package br.com.stockup.controller;
 
-import br.com.stockup.dto.CadastroProdutoDTO;
+import br.com.stockup.dto.request.CadastroProdutoDTO;
 import br.com.stockup.model.Produto;
 import br.com.stockup.service.ProdutoService;
 import jakarta.validation.Valid;
@@ -33,14 +33,14 @@ public class ProdutoController {
         produtoService.excluir(id);
     }
 
-    @GetMapping("/buscar")
+    @GetMapping("/buscar-nome")
     public List<Produto> buscarPorNome(@RequestParam String nome) {
         return produtoService.buscarPorNome(nome);
     }
 
-    @GetMapping("/{id}")
-    public Produto buscarPorId(@PathVariable Long id) {
-        return produtoService.buscarPorId(id);
+    @GetMapping("/{referencia}")
+    public Produto buscarPorReferencia(@PathVariable String referencia) {
+        return produtoService.buscarPorReferencia(referencia);
     }
 
     @GetMapping("/listar-produtos")

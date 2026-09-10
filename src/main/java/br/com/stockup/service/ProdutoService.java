@@ -1,7 +1,6 @@
 package br.com.stockup.service;
 
-import br.com.stockup.dto.CadastroProdutoDTO;
-import br.com.stockup.enums.StatusProduto;
+import br.com.stockup.dto.request.CadastroProdutoDTO;
 import br.com.stockup.model.Produto;
 
 import java.util.List;
@@ -14,9 +13,9 @@ public interface ProdutoService {
 
     void excluir(Long id);
 
-    Produto buscarPorId(Long id);
+    Produto buscarPorReferencia(String referencia);
 
     List<Produto> buscarPorNome(String nome);
 
-    List<Produto> findByStatusNot(StatusProduto status);
+    List<Produto> listarTodos();
 }

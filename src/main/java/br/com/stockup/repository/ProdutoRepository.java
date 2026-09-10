@@ -11,16 +11,15 @@ import java.util.Optional;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
-    boolean existsByReferencia(String referencia);
-    boolean existsByReferenciaAndCor(String referencia, String cor);
-
-    Optional<Produto> findByReferencia(String referencia);
-    Optional<Produto> findByReferenciaAndCor(String referencia, String cor);
+    boolean existsByReferenciaAndCorAndExcluidoFalse(String referencia, String cor);
 
     Optional<Produto> findByIdAndExcluidoFalse(Long id);
+
+    Optional<Produto> findByReferenciaAndCorAndExcluidoFalse(String referencia, String cor);
+
+    Optional<Produto> findByReferenciaAndExcluidoFalse(String referencia);
+
     List<Produto> findByExcluidoFalse();
 
-    List<Produto> findByNomeContainingIgnoreCase(String nome);
-
-    List<Produto> findByStatusNot(StatusProduto status);
+    List<Produto> findByNomeContainingIgnoreCaseAndExcluidoFalse(String nome);
 }
