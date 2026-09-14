@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,9 +37,7 @@ public class EstoqueProduto {
     private Ficha ficha;
 
     @Column(nullable = false)
-    @PositiveOrZero
-    private Integer estoqueMinimo = 0;
-
+    @PositiveOrZero(message = "A quantidade de fichas não pode ser negativa")
     private Integer quantidadeFichas;
 
     @ManyToOne
@@ -46,5 +45,5 @@ public class EstoqueProduto {
     private Produto produto;
 
     @OneToMany(mappedBy = "estoqueProduto", cascade = CascadeType.ALL)
-    private List<EstoqueTamanho> quantidadePorTamanho;
+    private List<EstoqueTamanho> quantidadePorTamanho = new ArrayList<>();
 }
