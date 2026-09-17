@@ -1,7 +1,7 @@
 package br.com.stockup.controller;
 
-import br.com.stockup.dto.*;
-import br.com.stockup.dto.RedefinirSenhaDTO;
+import br.com.stockup.dto.request.*;
+import br.com.stockup.dto.response.LoginResponseDTO;
 import br.com.stockup.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,7 @@
 package br.com.stockup.model;
 
 import br.com.stockup.enums.PerfilUsuario;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -33,6 +34,7 @@ public class Usuario {
 
     @Column(nullable = false)
     @NotBlank
+    @JsonIgnore
     private String senha;
 
     private String codigoRecuperacao;
@@ -43,5 +45,6 @@ public class Usuario {
     private PerfilUsuario perfil;
 
     @OneToOne(mappedBy = "usuario")
+    @JsonIgnore
     private Loja loja;
 }

@@ -1,6 +1,8 @@
 package br.com.stockup.service.impl;
 
 import br.com.stockup.dto.request.CadastroProdutoDTO;
+import br.com.stockup.dto.response.ProdutoResponseDTO;
+import br.com.stockup.enums.StatusProduto;
 import br.com.stockup.enums.TipoEstoque;
 import br.com.stockup.model.EstoqueProduto;
 import br.com.stockup.model.EstoqueTamanho;
@@ -13,6 +15,7 @@ import br.com.stockup.repository.ProdutoRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProdutoServiceImpl implements ProdutoService {
@@ -90,7 +93,17 @@ public class ProdutoServiceImpl implements ProdutoService {
 
         Produto produtoEncontrado = produto.get();
 
-        validarProdutoSemEstoque(produtoEncontrado);
+        if (!produtoEncontrado.getEstoques().isEmpty()) {
+
+            EstoqueProduto estoque = produtoEncontrado.getEstoques().get(0);
+
+            if (estoque.getTipoEstoque() == TipoEstoque.PAR) {
+                validarProdutoVarejoSemEstoque(produtoEncontrado);
+
+            } else if (estoque.getTipoEstoque() == TipoEstoque.FICHA) {
+                validarProdutoAtacadoSemEstoque(produtoEncontrado);
+            }
+        }
 
         produtoEncontrado.setExcluido(true);
 
@@ -98,42 +111,29 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
-    public Produto buscarPorReferencia(String referencia) {
-        if(referencia == null || referencia.isBlank()) {
-            throw new RuntimeException("Informe a referência do produto.");
-        }
-        return produtoRepository.findByReferenciaAndExcluidoFalse(referencia)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado."));
+    public List<ProdutoResponseDTO> buscar(String termo) {
+        return produtoRepository
+                .findByNomeContainingIgnoreCaseOrMarcaContainingIgnoreCaseOrCorContainingIgnoreCaseOrReferenciaContainingIgnoreCaseAndExcluidoFalse(
+                        termo, termo, termo, termo
+                )
+                .stream()
+                .map(ProdutoResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Produto> buscarPorNome(String nome) {
-        if(nome == null || nome.isBlank()) {
-            throw new RuntimeException("Informe o nome do produto.");
+    public List<ProdutoResponseDTO> listarProdutos(StatusProduto status) {
+        List<Produto> produtos;
+
+        if(status == null) {
+            produtos = produtoRepository.findByExcluidoFalse();
+        } else {
+            produtos = produtoRepository.findByExcluidoFalseAndStatus(status);
         }
 
-        List<Produto> produtos = produtoRepository.findByNomeContainingIgnoreCaseAndExcluidoFalse(nome);
-
-        if(produtos.isEmpty()){
-            throw new RuntimeException("Nenhum produto encontrado.");
-        }
-
-        return produtos;
-    }
-
-    @Override
-    public List<Produto> listarTodos() {
-        return produtoRepository.findByExcluidoFalse();
-    }
-
-    private void validarProdutoSemEstoque(Produto produto) {
-        for(EstoqueProduto estoque : produto.getEstoques()) {
-            for(EstoqueTamanho tamanho : estoque.getQuantidadePorTamanho()) {
-                if(tamanho.getQuantidade() != null && tamanho.getQuantidade() > 0) {
-                    throw new RuntimeException("Não é possível excluir um produto que possui estoque cadastrado.");
-                }
-            }
-        }
+        return produtos.stream()
+                .map(ProdutoResponseDTO::new)
+                .collect(Collectors.toList());
     }
 
     private void validarProdutoVarejoSemEstoque(Produto produto) {

@@ -17,9 +17,14 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     Optional<Produto> findByReferenciaAndCorAndExcluidoFalse(String referencia, String cor);
 
-    Optional<Produto> findByReferenciaAndExcluidoFalse(String referencia);
-
     List<Produto> findByExcluidoFalse();
 
-    List<Produto> findByNomeContainingIgnoreCaseAndExcluidoFalse(String nome);
+    List<Produto> findByExcluidoFalseAndStatus(StatusProduto status);
+
+    List<Produto> findByNomeContainingIgnoreCaseOrMarcaContainingIgnoreCaseOrCorContainingIgnoreCaseOrReferenciaContainingIgnoreCaseAndExcluidoFalse(
+            String nome,
+            String marca,
+            String cor,
+            String referencia
+    );
 }

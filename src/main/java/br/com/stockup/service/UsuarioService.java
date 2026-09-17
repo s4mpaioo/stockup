@@ -1,6 +1,7 @@
 package br.com.stockup.service;
 
-import br.com.stockup.dto.*;
+import br.com.stockup.dto.request.*;
+import br.com.stockup.dto.response.LoginResponseDTO;
 
 public interface UsuarioService {
 

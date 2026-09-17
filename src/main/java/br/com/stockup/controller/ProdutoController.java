@@ -1,7 +1,8 @@
 package br.com.stockup.controller;
 
 import br.com.stockup.dto.request.CadastroProdutoDTO;
-import br.com.stockup.model.Produto;
+import br.com.stockup.dto.response.ProdutoResponseDTO;
+import br.com.stockup.enums.StatusProduto;
 import br.com.stockup.service.ProdutoService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -33,19 +34,13 @@ public class ProdutoController {
         produtoService.excluir(id);
     }
 
-    @GetMapping("/buscar-nome")
-    public List<Produto> buscarPorNome(@RequestParam String nome) {
-        return produtoService.buscarPorNome(nome);
-    }
-
-    @GetMapping("/{referencia}")
-    public Produto buscarPorReferencia(@PathVariable String referencia) {
-        return produtoService.buscarPorReferencia(referencia);
+    @GetMapping("/buscar")
+    public List<ProdutoResponseDTO> buscar(@RequestParam String termo) {
+        return produtoService.buscar(termo);
     }
 
     @GetMapping("/listar-produtos")
-    public List<Produto> listarTodos() {
-        return produtoService.listarTodos();
+    public List<ProdutoResponseDTO> listarProdutos (@RequestParam(required = false) StatusProduto status) {
+        return produtoService.listarProdutos(status);
     }
 }
-
