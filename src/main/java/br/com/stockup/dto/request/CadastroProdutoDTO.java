@@ -25,8 +25,8 @@ public class CadastroProdutoDTO {
     @NotBlank(message = "A cor é obrigatória.")
     private String cor;
 
-    @NotNull(message = "A quantidade mínima de pares é obrigatória.")
-    @Min(value = 0, message = "A quantidade mínima não pode ser negativa.")
+    @NotNull(message = "O estoque mínimo é obrigatório.")
+    @Min(value = 0, message = "O estoque mínimo não pode ser negativo.")
     private Integer estoqueMinimo;
 
     private String descricao;

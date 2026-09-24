@@ -10,11 +10,8 @@ import lombok.Setter;
 public class LoginResponseDTO {
     private Long id;
 
-    @NotBlank(message = "O nome é obrigatório.")
     private String nome;
 
-    @NotBlank(message = "O email é obrigatório.")
-    @Email(message = "Informe um email válido.")
     private String email;
 }
 
