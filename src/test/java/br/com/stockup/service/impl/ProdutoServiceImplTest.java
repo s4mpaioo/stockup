@@ -14,6 +14,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Optional;
 
@@ -73,5 +74,41 @@ class ProdutoServiceImplTest {
         Assertions.assertEquals("Nude", produtoSalvo.getCor());
         Assertions.assertEquals(2, produtoSalvo.getEstoqueMinimo());
         Assertions.assertEquals(loja, produtoSalvo.getLoja());
+    }
+
+    @Test
+    void editarProdutoExistenteAtualizandoReferenciaAndCor() {
+        //ARRANGE
+        Produto produto = new Produto();
+        produto.setId(1L);
+        produto.setReferencia("123");
+        produto.setCor("Preto");
+
+        when(produtoRepository.findByIdAndExcluidoFalse(produto.getId())).thenReturn(Optional.of(produto));
+
+        CadastroProdutoDTO produtoEditado = new CadastroProdutoDTO();
+        produtoEditado.setReferencia("1953");
+        produtoEditado.setNome("Tenis Nike");
+        produtoEditado.setMarca("Nike");
+        produtoEditado.setModelo(ModeloProduto.TENIS);
+        produtoEditado.setCor("Nude");
+
+        when(produtoRepository.findByReferenciaAndCorAndExcluidoFalse(
+                produtoEditado.getReferencia(),
+                produtoEditado.getCor()
+        )).thenReturn(Optional.empty());
+
+        //ACT
+        produtoServiceImpl.editar(produto.getId(), produtoEditado);
+
+        //ASSERT
+        ArgumentCaptor<Produto> produtoCaptado = ArgumentCaptor.forClass(Produto.class);
+
+        verify(produtoRepository).save(produtoCaptado.capture());
+
+        Produto produtoSalvo = produtoCaptado.getValue();
+
+        Assertions.assertEquals("1953", produtoSalvo.getReferencia());
+        Assertions.assertEquals("Nude", produtoSalvo.getCor());
     }
 }
