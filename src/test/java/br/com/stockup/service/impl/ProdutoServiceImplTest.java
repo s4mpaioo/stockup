@@ -77,21 +77,26 @@ class ProdutoServiceImplTest {
     }
 
     @Test
-    void editarProdutoExistenteAtualizandoReferenciaAndCor() {
+    void editarProdutoExistenteAtualizaTodosOsDados() {
         //ARRANGE
         Produto produto = new Produto();
         produto.setId(1L);
         produto.setReferencia("123");
+        produto.setNome("Duramo AC2");
+        produto.setMarca("Adidas");
+        produto.setModelo(ModeloProduto.TENIS);
         produto.setCor("Preto");
+        produto.setDescricao("Tênis de corrida");
 
         when(produtoRepository.findByIdAndExcluidoFalse(produto.getId())).thenReturn(Optional.of(produto));
 
         CadastroProdutoDTO produtoEditado = new CadastroProdutoDTO();
         produtoEditado.setReferencia("1953");
-        produtoEditado.setNome("Tenis Nike");
+        produtoEditado.setNome("Nike Court Vision");
         produtoEditado.setMarca("Nike");
         produtoEditado.setModelo(ModeloProduto.TENIS);
-        produtoEditado.setCor("Nude");
+        produtoEditado.setCor("Branco");
+        produto.setDescricao("Tênis para o dia a dia");
 
         when(produtoRepository.findByReferenciaAndCorAndExcluidoFalse(
                 produtoEditado.getReferencia(),
@@ -108,7 +113,11 @@ class ProdutoServiceImplTest {
 
         Produto produtoSalvo = produtoCaptado.getValue();
 
-        Assertions.assertEquals("1953", produtoSalvo.getReferencia());
-        Assertions.assertEquals("Nude", produtoSalvo.getCor());
+        Assertions.assertEquals(produtoEditado.getReferencia(), produtoSalvo.getReferencia());
+        Assertions.assertEquals(produtoEditado.getNome(), produtoSalvo.getNome());
+        Assertions.assertEquals(produtoEditado.getMarca(), produtoSalvo.getMarca());
+        Assertions.assertEquals(produtoEditado.getModelo(), produtoSalvo.getModelo());
+        Assertions.assertEquals(produtoEditado.getCor(), produtoSalvo.getCor());
+        Assertions.assertEquals(produtoEditado.getDescricao(), produtoSalvo.getDescricao());
     }
 }
