@@ -107,11 +107,11 @@ class ProdutoServiceImplTest {
         produtoServiceImpl.editar(produto.getId(), produtoEditado);
 
         //ASSERT
-        ArgumentCaptor<Produto> produtoCaptado = ArgumentCaptor.forClass(Produto.class);
+        ArgumentCaptor<Produto> produtoCaptor = ArgumentCaptor.forClass(Produto.class);
 
-        verify(produtoRepository).save(produtoCaptado.capture());
+        verify(produtoRepository).save(produtoCaptor.capture());
 
-        Produto produtoSalvo = produtoCaptado.getValue();
+        Produto produtoSalvo = produtoCaptor.getValue();
 
         Assertions.assertEquals(produtoEditado.getReferencia(), produtoSalvo.getReferencia());
         Assertions.assertEquals(produtoEditado.getNome(), produtoSalvo.getNome());
