@@ -77,6 +77,30 @@ class ProdutoServiceImplTest {
     }
 
     @Test
+    void cadastroLancaExcecaoParaCorAndReferenciaJaCadastrado() {
+        //ARRANGE
+        Loja loja = new Loja();
+        loja.setId(10L);
+        CadastroProdutoDTO cadastroProduto = new CadastroProdutoDTO();
+        cadastroProduto.setReferencia("2332");
+        cadastroProduto.setCor("Preto");
+        cadastroProduto.setLojaId(loja.getId());
+
+        when(lojaRepository.findById(loja.getId())).thenReturn(Optional.of(loja));
+        when(produtoRepository.existsByReferenciaAndCorAndExcluidoFalse(cadastroProduto.getReferencia(),  cadastroProduto.getCor())).thenReturn(true);
+
+        //ACT
+        RuntimeException excecao = Assertions.assertThrows(
+                RuntimeException.class,
+                () -> produtoServiceImpl.cadastrarProduto(cadastroProduto)
+        );
+
+        Assertions.assertEquals("Já existe um produto com esta referência e cor.", excecao.getMessage());
+
+        verify(produtoRepository, never()).save(any(Produto.class));
+    }
+
+    @Test
     void editarProdutoExistenteAtualizaTodosOsDados() {
         //ARRANGE
         Produto produto = new Produto();
