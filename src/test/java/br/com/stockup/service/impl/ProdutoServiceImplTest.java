@@ -120,4 +120,24 @@ class ProdutoServiceImplTest {
         Assertions.assertEquals(produtoEditado.getCor(), produtoSalvo.getCor());
         Assertions.assertEquals(produtoEditado.getDescricao(), produtoSalvo.getDescricao());
     }
+
+    @Test
+    void produtoNaoEncontradoLancaExcecao() {
+        //ARRANGE
+        Long id = 149864L;
+
+        when(produtoRepository.findByIdAndExcluidoFalse(id)).thenReturn(Optional.empty());
+        CadastroProdutoDTO produtoDTO = new CadastroProdutoDTO();
+
+        //ACT
+        RuntimeException excecao = Assertions.assertThrows(
+                RuntimeException.class,
+                () -> produtoServiceImpl.editar(id, produtoDTO)
+        );
+
+        //ASSERT
+        Assertions.assertEquals("Produto não encontrado.", excecao.getMessage());
+
+        verify(produtoRepository, never()).save(any(Produto.class));
+    }
 }
