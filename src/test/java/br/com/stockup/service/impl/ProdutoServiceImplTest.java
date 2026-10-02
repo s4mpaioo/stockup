@@ -160,6 +160,8 @@ class ProdutoServiceImplTest {
 
         Produto outroProduto = new Produto();
         outroProduto.setId(170L);
+        outroProduto.setReferencia("123");
+        outroProduto.setCor("Preto");
 
         when(produtoRepository.findByReferenciaAndCorAndExcluidoFalse("123", "Preto")).thenReturn(Optional.of(outroProduto));
 
