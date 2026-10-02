@@ -1,6 +1,7 @@
 package br.com.stockup.service.impl;
 
 import br.com.stockup.dto.request.CadastroProdutoDTO;
+import br.com.stockup.dto.request.EditarProdutoDTO;
 import br.com.stockup.enums.ModeloProduto;
 import br.com.stockup.model.Loja;
 import br.com.stockup.model.Produto;
@@ -94,7 +95,7 @@ class ProdutoServiceImplTest {
                 RuntimeException.class,
                 () -> produtoServiceImpl.cadastrarProduto(cadastroProduto)
         );
-
+        //ASSERT
         Assertions.assertEquals("Já existe um produto com esta referência e cor.", excecao.getMessage());
 
         verify(produtoRepository, never()).save(any(Produto.class));
@@ -110,17 +111,19 @@ class ProdutoServiceImplTest {
         produto.setMarca("Adidas");
         produto.setModelo(ModeloProduto.TENIS);
         produto.setCor("Preto");
+        produto.setEstoqueMinimo(2);
         produto.setDescricao("Tênis de corrida");
 
         when(produtoRepository.findByIdAndExcluidoFalse(produto.getId())).thenReturn(Optional.of(produto));
 
-        CadastroProdutoDTO produtoEditado = new CadastroProdutoDTO();
+        EditarProdutoDTO produtoEditado = new EditarProdutoDTO();
         produtoEditado.setReferencia("1953");
         produtoEditado.setNome("Nike Court Vision");
         produtoEditado.setMarca("Nike");
         produtoEditado.setModelo(ModeloProduto.TENIS);
         produtoEditado.setCor("Branco");
-        produto.setDescricao("Tênis para o dia a dia");
+        produtoEditado.setEstoqueMinimo(10);
+        produtoEditado.setDescricao("Tênis para o dia a dia");
 
         when(produtoRepository.findByReferenciaAndCorAndExcluidoFalse(
                 produtoEditado.getReferencia(),
@@ -142,7 +145,65 @@ class ProdutoServiceImplTest {
         Assertions.assertEquals(produtoEditado.getMarca(), produtoSalvo.getMarca());
         Assertions.assertEquals(produtoEditado.getModelo(), produtoSalvo.getModelo());
         Assertions.assertEquals(produtoEditado.getCor(), produtoSalvo.getCor());
+        Assertions.assertEquals(produtoEditado.getEstoqueMinimo(), produtoSalvo.getEstoqueMinimo());
         Assertions.assertEquals(produtoEditado.getDescricao(), produtoSalvo.getDescricao());
+    }
+
+    @Test
+    void editarLancaExcecaoQuandoReferenciaECorJaPertencemAOutroProduto() {
+        Produto produto = new Produto();
+        produto.setId(1L);
+        produto.setReferencia("123");
+        produto.setCor("Preto");
+
+        when(produtoRepository.findByIdAndExcluidoFalse(produto.getId())).thenReturn(Optional.of(produto));
+
+        Produto outroProduto = new Produto();
+        outroProduto.setId(170L);
+
+        when(produtoRepository.findByReferenciaAndCorAndExcluidoFalse("123", "Preto")).thenReturn(Optional.of(outroProduto));
+
+        EditarProdutoDTO produtoDTO = new EditarProdutoDTO();
+        produtoDTO.setReferencia("123");
+        produtoDTO.setCor("Preto");
+
+        RuntimeException excecao = Assertions.assertThrows(
+                RuntimeException.class,
+                () -> produtoServiceImpl.editar(produto.getId(), produtoDTO)
+        );
+
+        Assertions.assertEquals("Já existe um produto com esta referência e cor.", excecao.getMessage());
+
+        verify(produtoRepository).findByIdAndExcluidoFalse(produto.getId());
+        verify(produtoRepository)
+                .findByReferenciaAndCorAndExcluidoFalse("123", "Preto");
+        verify(produtoRepository, never()).save(any(Produto.class));
+    }
+
+    @Test
+    void editarProdutoPermiteManterReferenciaECorDoProprioProduto() {
+        Produto produto = new Produto();
+        produto.setId(1L);
+        produto.setReferencia("123");
+        produto.setCor("Preto");
+
+        when(produtoRepository.findByIdAndExcluidoFalse(produto.getId()))
+                .thenReturn(Optional.of(produto));
+        when(produtoRepository.findByReferenciaAndCorAndExcluidoFalse("123", "Preto"))
+                .thenReturn(Optional.of(produto));
+
+        EditarProdutoDTO produtoDTO = new EditarProdutoDTO();
+        produtoDTO.setReferencia("123");
+        produtoDTO.setNome("Tênis");
+        produtoDTO.setMarca("Marca");
+        produtoDTO.setModelo(ModeloProduto.TENIS);
+        produtoDTO.setCor("Preto");
+        produtoDTO.setEstoqueMinimo(0);
+        produtoDTO.setDescricao("Descrição");
+
+        assertDoesNotThrow(() -> produtoServiceImpl.editar(produto.getId(), produtoDTO));
+
+        verify(produtoRepository).save(produto);
     }
 
     @Test
@@ -151,7 +212,7 @@ class ProdutoServiceImplTest {
         Long id = 149864L;
 
         when(produtoRepository.findByIdAndExcluidoFalse(id)).thenReturn(Optional.empty());
-        CadastroProdutoDTO produtoDTO = new CadastroProdutoDTO();
+        EditarProdutoDTO produtoDTO = new EditarProdutoDTO();
 
         //ACT
         RuntimeException excecao = Assertions.assertThrows(
