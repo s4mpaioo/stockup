@@ -1,6 +1,7 @@
 package br.com.stockup.controller;
 
 import br.com.stockup.dto.request.CadastroProdutoDTO;
+import br.com.stockup.dto.request.EditarProdutoDTO;
 import br.com.stockup.dto.response.ProdutoResponseDTO;
 import br.com.stockup.enums.StatusProduto;
 import br.com.stockup.service.ProdutoService;
@@ -25,8 +26,8 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
-    public void editar(@PathVariable Long id, @Valid @RequestBody CadastroProdutoDTO cadastroProdutoDTO) {
-        produtoService.editar(id, cadastroProdutoDTO);
+    public void editar(@PathVariable Long id, @Valid @RequestBody EditarProdutoDTO editarProdutoDTO) {
+        produtoService.editar(id, editarProdutoDTO);
     }
 
     @DeleteMapping("/{id}")

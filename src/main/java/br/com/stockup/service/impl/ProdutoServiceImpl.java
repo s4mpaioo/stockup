@@ -1,6 +1,7 @@
 package br.com.stockup.service.impl;
 
 import br.com.stockup.dto.request.CadastroProdutoDTO;
+import br.com.stockup.dto.request.EditarProdutoDTO;
 import br.com.stockup.dto.response.ProdutoResponseDTO;
 import br.com.stockup.enums.StatusProduto;
 import br.com.stockup.enums.TipoEstoque;
@@ -59,7 +60,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
-    public void editar(Long id, CadastroProdutoDTO cadastroProdutoDTO) {
+    public void editar(Long id, EditarProdutoDTO editarProdutoDTO) {
         Optional<Produto> produto = produtoRepository.findByIdAndExcluidoFalse(id);
 
         if (produto.isEmpty()) {
@@ -68,18 +69,19 @@ public class ProdutoServiceImpl implements ProdutoService {
 
         Produto produtoEncontrado = produto.get();
 
-        Optional<Produto> produtoReferencia = produtoRepository.findByReferenciaAndCorAndExcluidoFalse(cadastroProdutoDTO.getReferencia(), cadastroProdutoDTO.getCor());
+        Optional<Produto> produtoReferencia = produtoRepository.findByReferenciaAndCorAndExcluidoFalse(editarProdutoDTO.getReferencia(), editarProdutoDTO.getCor());
 
         if (produtoReferencia.isPresent() && !produtoReferencia.get().getId().equals(id)) {
             throw new RuntimeException("Já existe um produto com esta referência e cor.");
         }
 
-        produtoEncontrado.setReferencia(cadastroProdutoDTO.getReferencia());
-        produtoEncontrado.setNome(cadastroProdutoDTO.getNome());
-        produtoEncontrado.setMarca(cadastroProdutoDTO.getMarca());
-        produtoEncontrado.setModelo(cadastroProdutoDTO.getModelo());
-        produtoEncontrado.setCor(cadastroProdutoDTO.getCor());
-        produtoEncontrado.setDescricao(cadastroProdutoDTO.getDescricao());
+        produtoEncontrado.setReferencia(editarProdutoDTO.getReferencia());
+        produtoEncontrado.setNome(editarProdutoDTO.getNome());
+        produtoEncontrado.setMarca(editarProdutoDTO.getMarca());
+        produtoEncontrado.setModelo(editarProdutoDTO.getModelo());
+        produtoEncontrado.setCor(editarProdutoDTO.getCor());
+        produtoEncontrado.setEstoqueMinimo(editarProdutoDTO.getEstoqueMinimo());
+        produtoEncontrado.setDescricao(editarProdutoDTO.getDescricao());
 
         produtoRepository.save(produtoEncontrado);
     }
