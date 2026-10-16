@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,6 +34,8 @@ public class Venda {
     @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
 
+    private Integer quantidadeParcelas;
+
     @Enumerated(EnumType.STRING)
     private StatusVenda status;
 
@@ -41,12 +44,12 @@ public class Venda {
     private Loja loja;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "cliente_id", nullable = true)
     private Cliente cliente;
 
     @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
-    private List<ItemVendaAtacado> itensAtacado;
+    private List<ItemVendaAtacado> itensAtacado = new ArrayList<>();
 
     @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
-    private List<ItemVendaVarejo> itensVarejo;
+    private List<ItemVendaVarejo> itensVarejo = new ArrayList<>();
 }

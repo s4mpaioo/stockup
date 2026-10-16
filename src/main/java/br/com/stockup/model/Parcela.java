@@ -27,11 +27,11 @@ public class Parcela {
     private LocalDate dataVencimento;
 
     @Column(nullable = false)
-    private Boolean paga;
+    private Boolean paga = false;
 
     private LocalDate dataPagamento;
 
     @ManyToOne
-    @JoinColumn(name = "divida_id")
+    @JoinColumn(name = "divida_id", nullable = false)
     private Divida divida;
 }
