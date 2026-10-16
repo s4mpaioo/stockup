@@ -36,7 +36,7 @@ public class EstoqueProduto {
     @Enumerated(EnumType.STRING)
     private Ficha ficha;
 
-    @Column(nullable = false)
+    @Column
     @PositiveOrZero(message = "A quantidade de fichas não pode ser negativa")
     private Integer quantidadeFichas;
 
