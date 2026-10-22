@@ -26,6 +26,12 @@ public class UsuarioController {
         usuarioService.cadastrar(cadastroUsuarioDTO);
     }
 
+    @PostMapping("/verificar-email")
+    public ResponseEntity<String> verificarEmail(@Valid @RequestBody VerificarEmailDTO verificarEmailDTO) {
+        usuarioService.verificarEmail(verificarEmailDTO);
+        return ResponseEntity.ok("Email verificado e conta criada com sucesso.");
+    }
+
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginUsuarioDTO loginUsuarioDTO) {
         LoginResponseDTO response = usuarioService.login(loginUsuarioDTO);

@@ -10,7 +10,7 @@ public interface EstoqueProdutoService {
 
     void cadastrarVarejo(CadastroEstoqueVarejoDTO cadastroEstoqueVarejoDTO);
 
-    void editarAtacado(EditarEstoqueDTO dto);
+    void editarAtacado(EditarEstoqueDTO editarEstoqueDTO);
 
-    void editarVarejo(EditarEstoqueDTO dto);
+    void editarVarejo(EditarEstoqueDTO editarEstoqueDTO);
 }

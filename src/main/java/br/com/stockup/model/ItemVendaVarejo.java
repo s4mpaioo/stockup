@@ -29,10 +29,10 @@ public class ItemVendaVarejo {
     private BigDecimal subtotal;
 
     @ManyToOne
-    @JoinColumn(name = "venda_id")
+    @JoinColumn(name = "venda_id", nullable = false)
     private Venda venda;
 
     @ManyToOne
-    @JoinColumn(name = "estoque_tamanho_id")
-    private TamanhoEstoque tamanhoEstoque;
+    @JoinColumn(name = "estoque_tamanho_id", nullable = false)
+    private EstoqueTamanho estoqueTamanho;
 }

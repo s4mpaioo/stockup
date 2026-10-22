@@ -1,12 +1,13 @@
 package br.com.stockup.service;
 
-public class VendaService {
+import br.com.stockup.dto.request.CadastroVendaDTO;
+import br.com.stockup.dto.response.VendaResponseDTO;
 
-    public static void realizarVenda(){
-        // verificar estoque
+import java.util.List;
 
-        // atualizar estoque
+public interface VendaService {
 
-        // salvar venda
-    }
+    void realizarVenda(CadastroVendaDTO cadastroVendaDTO);
+
+    List<VendaResponseDTO> listarVendas(Long lojaId);
 }

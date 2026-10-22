@@ -29,10 +29,10 @@ public class Divida {
     private PeriodicidadePagamento periodicidade;
 
     @Column(nullable = false)
-    private Boolean quitada;
+    private Boolean quitada = false;
 
     @OneToOne
-    @JoinColumn(name = "venda_id")
+    @JoinColumn(name = "venda_id", nullable = false)
     private Venda venda;
 
     @OneToMany(mappedBy = "divida", cascade = CascadeType.ALL, orphanRemoval = true)
