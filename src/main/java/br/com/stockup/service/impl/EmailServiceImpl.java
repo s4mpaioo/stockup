@@ -27,4 +27,19 @@ public class EmailServiceImpl {
 
         mailSender.send(mensagem);
     }
+
+    public void enviarCodigoVerificacao(String email, String codigo) {
+
+        SimpleMailMessage mensagem = new SimpleMailMessage();
+
+        mensagem.setTo(email);
+        mensagem.setSubject("Verificação de email - StockUp");
+        mensagem.setText(
+                "Olá!\n\n" +
+                        "Seu código para concluir o cadastro no StockUp é: " + codigo +
+                        "\n\nO código expira em 10 minutos."
+        );
+
+        mailSender.send(mensagem);
+    }
 }
