@@ -27,6 +27,7 @@ public class ClienteServiceImpl implements ClienteService {
 
         Cliente cliente = new Cliente();
         cliente.setNome(cadastroClienteDTO.getNome());
+        cliente.setEmail(cadastroClienteDTO.getEmail());
         cliente.setTelefone(cadastroClienteDTO.getTelefone());
         cliente.setLoja(loja);
 
