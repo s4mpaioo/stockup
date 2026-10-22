@@ -7,6 +7,8 @@ public interface UsuarioService {
 
     void cadastrar(CadastroUsuarioDTO cadastroUsuarioDTO);
 
+    void verificarEmail(VerificarEmailDTO verificarEmailDTO);
+
     public LoginResponseDTO login(LoginUsuarioDTO loginUsuarioDTO);
 
     void redefinirSenha(RedefinirSenhaDTO redefinirSenhaDTO);
